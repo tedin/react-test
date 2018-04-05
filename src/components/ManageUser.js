@@ -1,38 +1,73 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as userActions from '../actions/userActions';
-import {Button, Form, Input} from 'semantic-ui-react';
+import {Tab, Tabs} from "material-ui";
+import UserForm from "./UserForm";
 
 
-const ManageUser = (props) => {
-    console.log(props.match.params.id);
-    const onSubmit = (e) => {
-        e.preventDefault();
-        let newUser = {
-            name: e.target.elements.name.value,
-            username: e.target.elements.username.value,
-            email: e.target.elements.email.value
-        };
-        this.props.actions.createUser(newUser);
-    };
+/*
+const TabOne = (props) => {
+    console.log(props);
     return (
         <div>
-            <Form onSubmit={this.submitForm}>
-                <Form.Field>
-                    <label>First name</label>
-                    <Input name={"name"} type={"text"} placeholder={"Enter name"}/>
-                </Form.Field>
-                <Form.Field>
-                    <label>Username</label>
-                    <Input name={"username"} type={"text"} placeholder={"Enter username"}/>
-                </Form.Field>
-                <Form.Field>
-                    <label>Email</label>
-                    <Input name={"email"} type={"email"} placeholder={"Enter email"}/> <br/>
-                </Form.Field>
-                <Button type={"submit"}>Submit</Button>
-            </Form>
+
+        </div>
+    );
+};
+*/
+
+const TabTwo = (props) => {
+    console.log(props);
+    return (
+        <p>Tab two content</p>
+    );
+};
+
+const TabThree = (props) => {
+    console.log(props);
+    return (
+        <p>Tab three content</p>
+    );
+};
+
+const ManageUser = (props) => {
+    const styles = {
+        headline: {
+            fontSize: 24,
+            paddingTop: 16,
+            marginBottom: 12,
+            fontWeight: 400,
+        },
+    };
+    console.log(props);
+    console.log(props.match.params.id);
+
+    return (
+        <div>
+            <Tabs>
+                <Tab label="Item One">
+                    <div>
+                        <UserForm {...props}/>
+                    </div>
+                </Tab>
+                <Tab label="Item Two">
+                    <div>
+                        <h2 style={styles.headline}>Tab Two</h2>
+                        <TabTwo/>
+                    </div>
+                </Tab>
+                <Tab
+                    label="onActive"
+                    data-route="/home"
+                >
+                    <div>
+                        <h2 style={styles.headline}>Tab Three</h2>
+                        <TabThree/>
+                    </div>
+                </Tab>
+            </Tabs>
         </div>
     )
 
@@ -45,7 +80,7 @@ ManageUser.defaultProps = {
 ManageUser.propTypes = {
     //users: PropTypes.array.isRequired,
     //createUser: PropTypes.func.isRequired
-    //actions: PropTypes.object
+    actions: PropTypes.object
 
 };
 

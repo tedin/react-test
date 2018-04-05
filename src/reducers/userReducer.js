@@ -6,6 +6,13 @@ export default function userReducer(state = [], action) {
             return [...state, Object.assign({}, action.payload)];
         case 'LOAD_USERS_SUCCESS':
             return action.payload;
+        case "CREATE_USER_SUCCESS":
+            return [...state, Object.assign({}, action.payload)];
+        case "UPDATE_USER_SUCCESS":
+            return action.payload;
+        case "USER_DELETED_SUCCESS":
+            let index = state.findIndex(user => user.id === action.payload);
+            return [...state.slice(0, index).concat(state.slice(index + 1))];
         default:
             return state;
     }

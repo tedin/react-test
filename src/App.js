@@ -1,60 +1,41 @@
 import React, {Component} from 'react';
-import './App.css';
 import 'react-notifications/lib/notifications.css';
-import {NotificationContainer, NotificationManager} from 'react-notifications';
-import List from "./List.js";
-import {Button} from 'semantic-ui-react';
-import 'semantic-ui-css/semantic.min.css';
-import "./index.css";
-import {Link} from 'react-router-dom';
+import {NotificationContainer} from 'react-notifications';
+import {BrowserRouter} from 'react-router-dom';
+import Sidebar from "./components/Sidebar";
+import {AppBar} from 'material-ui';
+import Routes from './routes';
+import Snack from "./UIComponents/Snack";
+import ConfirmDialog from "./UIComponents/ConfirmDialog";
 
 class App extends Component {
-    createNotification = (type) => {
-        return () => {
-            switch (type) {
-                case 'info':
-                    NotificationManager.info('Info message');
-                    break;
-                case 'success':
-                    NotificationManager.success('Success message', 'Title here');
-                    break;
-                case 'warning':
-                    NotificationManager.warning('Warning message', 'Close after 3000ms', 3000);
-                    break;
-                case 'error':
-                    NotificationManager.error('Error message', 'Click me!', 5000, () => {
-                        alert('callback');
-                    });
-                    break;
-                default:
-                    break;
-            }
-        };
+    state = {
+        isOpen: false
     };
+    contentStyle = {transition: 'margin-left 450ms cubic-bezier(0.23, 1, 0.32, 1)'};
+
+    closeDrawer = () => this.setState({isOpen: false});
+
+    openDrawer = () => this.setState({isOpen: true});
 
     render() {
         return (
+            <BrowserRouter>
+                <div>
+                    <AppBar
+                        title="Title"
+                        iconClassNameRight="muidocs-icon-navigation-expand-more"
+                        onLeftIconButtonClick={this.openDrawer}/>
+                    <Sidebar isOpen={this.state.isOpen}/>
 
-            <div className='root'>
-                <Link to={'/manage'}>{'Manage'}</Link>
-                <Link to={'/manage/3'}>{'Manage with id'}</Link>
-                <Link to={'/params?id=3&name=edin'}>{'Params'}</Link>
-                <Button primary className='btn btn-info'
-                        onClick={this.createNotification('info')}>Info
-                </Button>
-                <Button positive className='btn btn-success'
-                        onClick={this.createNotification('success')}>Success
-                </Button>
-                <Button style={{backgroundColor: "orange", color: "white"}} className='btn btn-warning'
-                        onClick={this.createNotification('warning')}>Warning
-                </Button>
-                <Button negative className='btn btn-danger'
-                        onClick={this.createNotification('error')}>Error
-                </Button>
-                <Button onClick={() => this.setState({visible: true})}>Open modal</Button>
-                <List/>
-                <NotificationContainer/>
-            </div>
+                    <div onClick={this.closeDrawer} style={this.contentStyle}>
+                        <Routes/>
+                    </div>
+                    <NotificationContainer/>
+                    <Snack/>
+                    <ConfirmDialog/>
+                </div>
+            </BrowserRouter>
         );
     }
 }

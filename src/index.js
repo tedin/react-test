@@ -1,32 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import ManageUsers from './components/ManageUsers';
-import ManageUser from './components/ManageUser';
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './store/configureStore';
 import {Provider} from 'react-redux';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+//import 'semantic-ui-css/semantic.min.css';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import App from "./App";
+import {saveState} from "./common/localStorage";
+import {throttle} from 'lodash';
+
 
 const store = configureStore();
-//store.dispatch(getUsers());
+/*store.subscribe(throttle(() => {
+    saveState({
+        users: store.getState().users
+    });
+}, 1000));*/
+store.subscribe(() => {
+    saveState({
+        users: store.getState().users
+    });
+});
+//store.dispatch(userActions.getUsers());
+
 
 ReactDOM.render(
     <Provider store={store}>
-        {/*<App/>*/}
-        <BrowserRouter>
-            <Switch>
-                <Route exact path={'/'} component={App}/>
-                <Route exact path={'/manage'} component={ManageUsers}/>
-                <Route path={'/manage/:id'} component={ManageUser}/>
-                <Route path={'/params'} render={(props) => {
-                    const params = new URLSearchParams(props.location.search);
-                    console.log(params.get("name"));
-                    return (<pre>PARAMS</pre>)
-                }}/>
-            </Switch>
-        </BrowserRouter>
+        <MuiThemeProvider>
+            <App/>
+        </MuiThemeProvider>
     </Provider>,
     document.getElementById('root'));
 registerServiceWorker();

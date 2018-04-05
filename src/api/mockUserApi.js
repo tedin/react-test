@@ -1,13 +1,19 @@
+import axios from "axios";
+
+const baseUrl = '/users';
 export const addUser = user => {
-    return new Promise((resolve, reject) => {
-        if (user.id > 0)
+    /*return new Promise((resolve, reject) => {
+        //if (user.id)
             resolve(user);
-        reject("Oooops");
-    });
+        //reject("Oooops");
+    });*/
+    return axios.post(baseUrl, user);
 };
 
+export const updateUser = user => axios.put(baseUrl, user);
+
 export const getUsers = () => {
-    return new Promise((resolve, reject) => {
+    /*return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve([{
                 id: 1,
@@ -33,5 +39,8 @@ export const getUsers = () => {
         }, 1000);
         if (1 < 0)
             reject("OOOPS");
-    });
+    });*/
+    return axios.get(baseUrl);
 };
+
+export const deleteUser = (id) => axios.delete(baseUrl + '/' + id);

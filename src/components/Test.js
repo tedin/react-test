@@ -1,24 +1,27 @@
 import React, {Component} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import * as userActions from '../actions/userActions';
 
-class ManageUsers extends Component {
+class Test extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
 
     /*componentDidMount() {
         
     }*/
 
     render() {
-        return (<div>TEST</div>);
+        return ();
     }
 }
 
-ManageUsers.defaultProps = {
+Test.defaultProps = {
     //name: "test"
 };
 
-ManageUsers.propTypes = {
+Test.propTypes = {
     //users: PropTypes.array.isRequired,
     //createUser: PropTypes.func.isRequired
     //actions: PropTypes.object
@@ -32,8 +35,8 @@ function mapStateToProps(state, props) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        actions: bindActionCreators(userActions, dispatch)
+        actions: bindActionCreators(actions, dispatch)
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ManageUsers)
+export default connect(mapStateToProps, mapDispatchToProps)(Test)

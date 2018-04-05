@@ -1,35 +1,61 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
-import {Button, Container, Form, Input, Table} from 'semantic-ui-react';
-import ConfirmDialogModal from './ConfirmDialogModal';
+import {Form} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 import * as userActions from './actions/userActions';
+import * as snackBarActions from './actions/snackBarActions';
+import * as dialogActions from './actions/dialogActions';
+import {NotificationManager} from 'react-notifications';
+
+import {Link, Route} from "react-router-dom";
+import {FlatButton, TextField} from 'material-ui';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
+
+
+const TestComponent = () => <h1> Test component</h1>;
+
 
 class List extends Component {
-    changeInput = ev => this.setState({inputResult: ev.target.value});
+    handleClick = () => {
+        this.props.showSnackBar({message: "Event emitted"});
+
+    };
+
+
     deletePerson = p => {
-        //alert("Delete" + JSON.stringify(p));
-        this.setState({modalOpen: true});
+        this.props.confirmDialog.openConfirmDialog({
+            title: "Test title", onSubmit: (data) => {
+                NotificationManager.success("Success", "Title");
+            }, onCancel: (data) => {
+                console.log("from cancel data", data);
+            }, content: <TestComponent/>
+        })/*.then(res => {
+            debugger;
+            console.log(res);
+        }).catch(err => {
+            debugger;
+            console.log(err);
+        })*/;
+        /*this.props.actions.deleteUser(p.id).then(() => {
+                //NotificationManager.success("Success", "Title");
+
+            }
+        );*/
+
     };
-    handleModalClose = () => {
-        this.setState({modalOpen: false});
-        alert("modal closed");
-    };
+
     submitForm = e => {
         e.preventDefault();
-        console.log(e.target.elements.name.value);
-        /*this.state.user = {
-            name: e.target.elements.name.value,
-            username: e.target.elements.username.value,
-            email: e.target.elements.email.value
-        };*/
+
         let newUser = {
             name: e.target.elements.name.value,
             username: e.target.elements.username.value,
-            email: e.target.elements.email.value
+            email: e.target.elements.email.value,
+            phone: e.target.elements.phone.value
         };
         //this.props.createUser(newUser);//TODO old way
+        debugger;
         this.props.actions.createUser(newUser);
         //this.setState({users: this.state.users.concat(dataForSend)});
     };
@@ -51,7 +77,10 @@ class List extends Component {
                 phone: ''
             },
             isLoaded: false,
-            modalOpen: false
+            modalOpen: false,
+            autoHideDuration: 2000,
+            message: 'Event added to your calendar',
+            open: false,
         };
     }
 
@@ -61,105 +90,91 @@ class List extends Component {
                 const users = res.data;
                 this.setState({users, isLoaded: true});
             })*/
-        this.props.actions.getUsers();
+
+        /*axios.get("/users").then(res => {
+            console.log(res);
+        }).catch(err => {
+            console.log(err);
+        });*/
+        this.props.actions.getUsers().then((res) => {
+            console.log("in list", res);
+        }).catch(err => {
+            console.log(err);
+        });
     }
 
     editPerson(e, p) {
-        console.log("event", e.nativeEvent);
         alert("Edit" + JSON.stringify(p));
-        console.log(this.state);
 
     };
 
     render() {
-        console.log(this.state);
-        let {inputResult} = this.state;
         return (
             <div>
-                {/*<Table>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>{"Id"}</Table.HeaderCell>
-                            <Table.HeaderCell>{"Name"}</Table.HeaderCell>
-                            <Table.HeaderCell>{"Username"}</Table.HeaderCell>
-                            <Table.HeaderCell>{"Email"}</Table.HeaderCell>
-                            <Table.HeaderCell>{"Phone"}</Table.HeaderCell>
-                            <Table.HeaderCell>{"Actions"}</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                        {this.state.isLoaded ? this.state.users.map((p, index) =>
-                            <Table.Row key={index}>
-                                <Table.Cell>{p.id}</Table.Cell>
-                                <Table.Cell>{p.name}</Table.Cell>
-                                <Table.Cell key={p.username}>{p.username}</Table.Cell>
-                                <Table.Cell key={p.email}>{p.email}</Table.Cell>
-                                <Table.Cell key={p.phone}>{p.phone}</Table.Cell>
-                                <Table.Cell>
-                                    <Button size={"small"} positive onClick={(e) => this.editPerson(e, p)}>EDIT
-                                    </Button>
-                                    <Button size={"small"} negative onClick={() => this.deletePerson(p)}>DELETE</Button>
-                                    <Button onClick={this.justEvent}>Event</Button>
-                                </Table.Cell>
-                            </Table.Row>
-                        ) : <Table.Row>
-                            <Table.Cell>{"Loading..."}</Table.Cell>
-                        </Table.Row>}
-                    </Table.Body>
-                </Table>*/}
-                <Table>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>{"Id"}</Table.HeaderCell>
-                            <Table.HeaderCell>{"Name"}</Table.HeaderCell>
-                            <Table.HeaderCell>{"Username"}</Table.HeaderCell>
-                            <Table.HeaderCell>{"Email"}</Table.HeaderCell>
-                            <Table.HeaderCell>{"Phone"}</Table.HeaderCell>
-                            <Table.HeaderCell>{"Actions"}</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
+                <Table selectable={false}>
+                    <TableHeader enableSelectAll={false} displaySelectAll={false} adjustForCheckbox={false}>
+                        <TableRow selectable={false}>
+                            <TableHeaderColumn>Id</TableHeaderColumn>
+                            <TableHeaderColumn>Name</TableHeaderColumn>
+                            <TableHeaderColumn>Username</TableHeaderColumn>
+                            <TableHeaderColumn>Email</TableHeaderColumn>
+                            <TableHeaderColumn>Phone</TableHeaderColumn>
+                            <TableHeaderColumn>Actions</TableHeaderColumn>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody selectable={false} displayRowCheckbox={false}>
                         {this.props.users.map((p, index) =>
-                            <Table.Row key={index}>
-                                <Table.Cell>{p.id}</Table.Cell>
-                                <Table.Cell>{p.name}</Table.Cell>
-                                <Table.Cell key={p.username}>{p.username}</Table.Cell>
-                                <Table.Cell key={p.email}>{p.email}</Table.Cell>
-                                <Table.Cell key={p.phone}>{p.phone}</Table.Cell>
-                                <Table.Cell>
-                                    <Button size={"small"} positive onClick={(e) => this.editPerson(e, p)}>EDIT
-                                    </Button>
-                                    <Button size={"small"} negative onClick={() => this.deletePerson(p)}>DELETE</Button>
-                                    <Button onClick={this.justEvent}>Event</Button>
-                                </Table.Cell>
-                            </Table.Row>
+                            <TableRow key={index} selectable={false}>
+                                <TableRowColumn>{p.id}</TableRowColumn>
+                                <TableRowColumn>{p.name}</TableRowColumn>
+                                <TableRowColumn key={p.username}>{p.username}</TableRowColumn>
+                                <TableRowColumn key={p.email}>{p.email}</TableRowColumn>
+                                <TableRowColumn key={p.phone}>{p.phone}</TableRowColumn>
+                                <TableRowColumn>
+                                    <FlatButton primary={true}><Link to={{
+                                        pathname: '/manage/3',
+                                        state: p
+                                    }
+                                    }>EDIT</Link>
+                                    </FlatButton>
+                                    <FlatButton secondary={true}
+                                                onClick={() => this.deletePerson(p)}>DELETE</FlatButton>
+                                    <FlatButton onClick={this.handleClick}>Event</FlatButton>
+                                </TableRowColumn>
+                            </TableRow>
                         )}
-                    </Table.Body>
+                    </TableBody>
                 </Table>
                 <Form onSubmit={this.submitForm}>
                     <Form.Field>
-                        <label>First name</label>
-                        <Input name={"name"} type={"text"} placeholder={"Enter name"}/>
+                        <TextField floatingLabelText={"Name"} name={"name"} type={"text"} hintText={"Enter name"}/>
                     </Form.Field>
                     <Form.Field>
-                        <label>Username</label>
-                        <Input name={"username"} type={"text"} placeholder={"Enter username"}/>
+                        <TextField floatingLabelText={"Username"} name={"username"} type={"text"}
+                                   hintText={"Enter username"}/>
                     </Form.Field>
                     <Form.Field>
-                        <label>Email</label>
-                        <Input name={"email"} type={"email"} placeholder={"Enter email"}/> <br/>
+                        <TextField floatingLabelText={"Email"} name={"email"} type={"text"}
+                                   hintText={"Enter email"}/> <br/>
                     </Form.Field>
-                    <Button type={"submit"}>Submit</Button>
+                    <Form.Field>
+                        <TextField floatingLabelText={"Phone"} name={"phone"} type={"text"}
+                                   hintText={"Enter phone"}/> <br/>
+                    </Form.Field>
+                    <FlatButton type={"submit"}>Submit</FlatButton>
                 </Form>
-                <Container>
-                    <p>{this.props.name}</p>
-                </Container>
-                <Input type={'text'} value={inputResult} onChange={(e) => this.changeInput(e)}/>
-                <Container>
-                    <pre>{inputResult}</pre>
-                </Container>
-                <ConfirmDialogModal header={"Header"} body={"Body"} open={this.state.modalOpen}
-                                    handleClose={this.handleModalClose}/>
+
+                <ul>
+                    <li>
+                        <Link to={`${this.props.match.url}/other`}>PARAMS</Link>
+                    </li>
+                </ul>
+
+                <Route path={`${this.props.match.url}/other`} render={(props) => {
+                    const params = new URLSearchParams(props.location.search);
+                    params.forEach(key => console.log(key));
+                    return (<pre>PARAMS</pre>)
+                }}/>
             </div>
         )
 
@@ -178,14 +193,17 @@ List.propTypes = {
 
 function mapStateToProps(state, props) {
     return {
-        users: state.users
+        users: state.users,
+        snackBar: state.snackBar
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         //createUser: user => dispatch(userActions.createUser(user))
-        actions: bindActionCreators(userActions, dispatch)
+        actions: bindActionCreators(userActions, dispatch),
+        ...bindActionCreators(snackBarActions, dispatch),
+        confirmDialog: bindActionCreators(dialogActions, dispatch)
     }
 }
 
