@@ -7,7 +7,6 @@ import * as userActions from './actions/userActions';
 import * as snackBarActions from './actions/snackBarActions';
 import * as dialogActions from './actions/dialogActions';
 import {NotificationManager} from 'react-notifications';
-
 import {Link, Route} from "react-router-dom";
 import {FlatButton, TextField} from 'material-ui';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
@@ -26,7 +25,10 @@ class List extends Component {
     deletePerson = p => {
         this.props.confirmDialog.openConfirmDialog({
             title: "Test title", onSubmit: (data) => {
-                NotificationManager.success("Success", "Title");
+                this.props.actions.deleteUser(p.id).then(() => {
+                        NotificationManager.success("Success", "Title");
+                    }
+                );
             }, onCancel: (data) => {
                 console.log("from cancel data", data);
             }, content: <TestComponent/>
@@ -105,10 +107,12 @@ class List extends Component {
 
     editPerson(e, p) {
         alert("Edit" + JSON.stringify(p));
-
     };
 
     render() {
+        let params = new URLSearchParams(this.props.location.search);
+        for (let param of params)
+            console.log(param);
         return (
             <div>
                 <Table selectable={false}>

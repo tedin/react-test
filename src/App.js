@@ -7,6 +7,7 @@ import {AppBar} from 'material-ui';
 import Routes from './routes';
 import Snack from "./UIComponents/Snack";
 import ConfirmDialog from "./UIComponents/ConfirmDialog";
+import CustomLoader from './UIComponents/CustomLoader';
 
 class App extends Component {
     state = {
@@ -22,18 +23,22 @@ class App extends Component {
         return (
             <BrowserRouter>
                 <div>
+                    <CustomLoader/>
                     <AppBar
                         title="Title"
                         iconClassNameRight="muidocs-icon-navigation-expand-more"
                         onLeftIconButtonClick={this.openDrawer}/>
+
                     <Sidebar isOpen={this.state.isOpen}/>
 
                     <div onClick={this.closeDrawer} style={this.contentStyle}>
                         <Routes/>
+                        <NotificationContainer/>
+                        <Snack/>
+                        <ConfirmDialog/>
                     </div>
-                    <NotificationContainer/>
-                    <Snack/>
-                    <ConfirmDialog/>
+
+
                 </div>
             </BrowserRouter>
         );

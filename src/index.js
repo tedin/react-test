@@ -9,7 +9,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import App from "./App";
 import {saveState} from "./common/localStorage";
 import {throttle} from 'lodash';
-
+//import 'loaders.css/loaders.min.css';
 
 const store = configureStore();
 /*store.subscribe(throttle(() => {

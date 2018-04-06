@@ -13,7 +13,7 @@ export const addUser = user => {
 export const updateUser = user => axios.put(baseUrl, user);
 
 export const getUsers = () => {
-    /*return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve([{
                 id: 1,
@@ -36,11 +36,11 @@ export const getUsers = () => {
                 email: "test@test.com",
                 phone: '1244545'
             }]);
-        }, 1000);
+        }, 2000);
         if (1 < 0)
             reject("OOOPS");
-    });*/
-    return axios.get(baseUrl);
+    });
+    //return axios.get(baseUrl);
 };
 
 export const deleteUser = (id) => axios.delete(baseUrl + '/' + id);

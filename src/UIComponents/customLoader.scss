@@ -1,0 +1,9 @@
+$primary-color: rgb(0, 188, 212);
+@import '../../node_modules/loaders.css/src/animations/ball-grid-pulse.scss';
+.loader-hidden {
+  display: none;
+}
+
+.loader-active {
+  display: block;
+}

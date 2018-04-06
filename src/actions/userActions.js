@@ -1,4 +1,5 @@
 import * as userApi from "../api/mockUserApi";
+import {hideLoader, showLoader} from './customLoaderActions';
 
 //const CREATE_USER = 'CREATE_USER';//this goes to separate actionTypes file
 /*export function createUser(user) {
@@ -43,12 +44,14 @@ export function loadUsersSuccess(users) {
 
 export function getUsers() {
     return function (dispatch, state) {
-        console.log(state());
+        dispatch(showLoader());
         return userApi.getUsers().then(res => {
-            dispatch(loadUsersSuccess(res.data));
-            //dispatch(loadUsersSuccess(res));
-            return Promise.resolve(res);
+            dispatch(hideLoader());
+            //dispatch(loadUsersSuccess(res.data));
+            dispatch(loadUsersSuccess(res));
+            //return Promise.resolve(res);
         }).catch(error => {
+            dispatch(hideLoader());
             throw(error);
         })
     }
@@ -56,11 +59,12 @@ export function getUsers() {
 
 export function deleteUser(id) {
     return function (dispatch) {
-        return userApi.deleteUser(id).then(res => {
-            dispatch(userDeletedSuccess(id));
+        dispatch(userDeletedSuccess(id));
+        return Promise.resolve();
+        /*return userApi.deleteUser(id).then(res => {
         }).catch(error => {
             throw(error);
-        })
+        })*/
     }
 }
 
