@@ -1,0 +1,9 @@
+.Item {
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: solid 1px #000000;
+}
+
+.Item:hover {
+    background-color: #f6f6f6;
+}

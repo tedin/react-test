@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
-import {Form} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 import * as userActions from './actions/userActions';
 import * as snackBarActions from './actions/snackBarActions';
 import * as dialogActions from './actions/dialogActions';
 import {NotificationManager} from 'react-notifications';
-import {Link, Route} from "react-router-dom";
-import {FlatButton, TextField} from 'material-ui';
+import {Link} from "react-router-dom";
+import {FlatButton} from 'material-ui';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn,} from 'material-ui/Table';
+import {push} from 'react-router-redux'
 
 
-const TestComponent = () => <h1> Test component</h1>;
+const TestComponent = (props) => <h1>Are you sure you want do delete {props.name}?</h1>;
 
 
 class List extends Component {
@@ -24,14 +24,14 @@ class List extends Component {
 
     deletePerson = p => {
         this.props.confirmDialog.openConfirmDialog({
-            title: "Test title", onSubmit: (data) => {
+            title: "Please confirm", onSubmit: (data) => {
                 this.props.actions.deleteUser(p.id).then(() => {
                         NotificationManager.success("Success", "Title");
                     }
                 );
             }, onCancel: (data) => {
                 console.log("from cancel data", data);
-            }, content: <TestComponent/>
+            }, content: <TestComponent name={p.firstName}/>
         })/*.then(res => {
             debugger;
             console.log(res);
@@ -98,11 +98,13 @@ class List extends Component {
         }).catch(err => {
             console.log(err);
         });*/
+        console.log("PROPS", this.props);
         this.props.actions.getUsers().then((res) => {
             console.log("in list", res);
         }).catch(err => {
             console.log(err);
         });
+        this.props.goTo();
     }
 
     editPerson(e, p) {
@@ -119,7 +121,8 @@ class List extends Component {
                     <TableHeader enableSelectAll={false} displaySelectAll={false} adjustForCheckbox={false}>
                         <TableRow selectable={false}>
                             <TableHeaderColumn>Id</TableHeaderColumn>
-                            <TableHeaderColumn>Name</TableHeaderColumn>
+                            <TableHeaderColumn>First name</TableHeaderColumn>
+                            <TableHeaderColumn>Last name</TableHeaderColumn>
                             <TableHeaderColumn>Username</TableHeaderColumn>
                             <TableHeaderColumn>Email</TableHeaderColumn>
                             <TableHeaderColumn>Phone</TableHeaderColumn>
@@ -130,7 +133,8 @@ class List extends Component {
                         {this.props.users.map((p, index) =>
                             <TableRow key={index} selectable={false}>
                                 <TableRowColumn>{p.id}</TableRowColumn>
-                                <TableRowColumn>{p.name}</TableRowColumn>
+                                <TableRowColumn>{p.firstName}</TableRowColumn>
+                                <TableRowColumn>{p.lastName}</TableRowColumn>
                                 <TableRowColumn key={p.username}>{p.username}</TableRowColumn>
                                 <TableRowColumn key={p.email}>{p.email}</TableRowColumn>
                                 <TableRowColumn key={p.phone}>{p.phone}</TableRowColumn>
@@ -149,7 +153,7 @@ class List extends Component {
                         )}
                     </TableBody>
                 </Table>
-                <Form onSubmit={this.submitForm}>
+                {/*<Form onSubmit={this.submitForm}>
                     <Form.Field>
                         <TextField floatingLabelText={"Name"} name={"name"} type={"text"} hintText={"Enter name"}/>
                     </Form.Field>
@@ -170,15 +174,15 @@ class List extends Component {
 
                 <ul>
                     <li>
-                        <Link to={`${this.props.match.url}/other`}>PARAMS</Link>
+                        <Link to={`${this.props.match.url}/other`}>{`${this.props.match.url}/other`}</Link>
                     </li>
                 </ul>
 
-                <Route path={`${this.props.match.url}/other`} render={(props) => {
+                <Route path={`${this.props.match.url}/other`} render={(props) =>
                     const params = new URLSearchParams(props.location.search);
                     params.forEach(key => console.log(key));
-                    return (<pre>PARAMS</pre>)
-                }}/>
+                     (<pre>PARAMS</pre>)
+                }/>*/}
             </div>
         )
 
@@ -198,7 +202,7 @@ List.propTypes = {
 function mapStateToProps(state, props) {
     return {
         users: state.users,
-        snackBar: state.snackBar
+        snackBar: state.snackBar,
     }
 }
 
@@ -207,7 +211,9 @@ function mapDispatchToProps(dispatch) {
         //createUser: user => dispatch(userActions.createUser(user))
         actions: bindActionCreators(userActions, dispatch),
         ...bindActionCreators(snackBarActions, dispatch),
-        confirmDialog: bindActionCreators(dialogActions, dispatch)
+        confirmDialog: bindActionCreators(dialogActions, dispatch),
+        goTo: () => dispatch(push('/'))
+
     }
 }
 

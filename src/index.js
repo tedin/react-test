@@ -18,6 +18,7 @@ const store = configureStore();
     });
 }, 1000));*/
 store.subscribe(() => {
+    console.log("state changed");
     saveState({
         users: store.getState().users
     });

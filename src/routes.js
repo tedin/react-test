@@ -8,7 +8,7 @@ export default function () {
     return (
         <Switch>
             <Route exact path={'/'} component={Home}/>
-            <Route exact path={"/manage"} component={List}/>
+            <Route path={"/manage"} component={List}/>
             <Route path={'/manageuser'} component={ManageUser}/>
             {/*<Route exact path={'manage'} component={ManageUsers}/>
                 <Route path={'params'} render={(props) => {

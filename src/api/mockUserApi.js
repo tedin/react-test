@@ -13,34 +13,34 @@ export const addUser = user => {
 export const updateUser = user => axios.put(baseUrl, user);
 
 export const getUsers = () => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve([{
-                id: 1,
-                username: "First",
-                email: "test@test.com",
-                phone: '1244545'
-            }, {
-                id: 2,
-                username: "First",
-                email: "test@test.com",
-                phone: '1244545'
-            }, {
-                id: 3,
-                username: "First",
-                email: "test@test.com",
-                phone: '1244545'
-            }, {
-                id: 4,
-                username: "First",
-                email: "test@test.com",
-                phone: '1244545'
-            }]);
-        }, 2000);
-        if (1 < 0)
-            reject("OOOPS");
-    });
-    //return axios.get(baseUrl);
+    /* return new Promise((resolve, reject) => {
+         setTimeout(() => {
+             resolve([{
+                 id: 1,
+                 username: "First",
+                 email: "test@test.com",
+                 phone: '1244545'
+             }, {
+                 id: 2,
+                 username: "First",
+                 email: "test@test.com",
+                 phone: '1244545'
+             }, {
+                 id: 3,
+                 username: "First",
+                 email: "test@test.com",
+                 phone: '1244545'
+             }, {
+                 id: 4,
+                 username: "First",
+                 email: "test@test.com",
+                 phone: '1244545'
+             }]);
+         }, 2000);
+         if (1 < 0)
+             reject("OOOPS");
+     });*/
+    return axios.get(baseUrl);
 };
 
 export const deleteUser = (id) => axios.delete(baseUrl + '/' + id);

@@ -3,11 +3,12 @@ export default function userReducer(state = [], action) {
     switch (action.type) {
         case 'CREATE_USER':
             //return state.concat(action.payload);
-            return [...state, Object.assign({}, action.payload)];
+            //return [...state, Object.assign({}, action.payload)];
+            return state;
         case 'LOAD_USERS_SUCCESS':
             return action.payload;
         case "CREATE_USER_SUCCESS":
-            return [...state, Object.assign({}, action.payload)];
+            return [...state, action.payload];
         case "UPDATE_USER_SUCCESS":
             return action.payload;
         case "USER_DELETED_SUCCESS":

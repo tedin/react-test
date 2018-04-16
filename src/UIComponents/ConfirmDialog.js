@@ -17,13 +17,6 @@ class ConfirmDialog extends React.Component {
         this.props.options.onSubmit(data);
     };
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            open: Object.assign({}, this.props.options.open)
-        };
-    }
-
     render() {
         const actions = [
             <FlatButton

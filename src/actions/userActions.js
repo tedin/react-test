@@ -2,11 +2,11 @@ import * as userApi from "../api/mockUserApi";
 import {hideLoader, showLoader} from './customLoaderActions';
 
 //const CREATE_USER = 'CREATE_USER';//this goes to separate actionTypes file
-/*export function createUser(user) {
-    return {type: CREATE_USER, payload: user}
-}*/
-
 export function createUser(user) {
+    return {type: "CREATE_USER", payload: user}
+}
+
+/*export function createUser(user) {
     return function (dispatch) {
         return userApi.addUser(user).then(res => {
             dispatch(createUserSuccess(res.data));
@@ -15,7 +15,7 @@ export function createUser(user) {
             throw err;
         })
     }
-}
+}*/
 
 export function createUserSuccess(user) {
     return {type: "CREATE_USER_SUCCESS", payload: user};
@@ -48,8 +48,8 @@ export function getUsers() {
         return userApi.getUsers().then(res => {
             dispatch(hideLoader());
             //dispatch(loadUsersSuccess(res.data));
-            dispatch(loadUsersSuccess(res));
-            //return Promise.resolve(res);
+            dispatch(loadUsersSuccess(res.data));
+            return Promise.resolve(res.data);
         }).catch(error => {
             dispatch(hideLoader());
             throw(error);
@@ -59,12 +59,13 @@ export function getUsers() {
 
 export function deleteUser(id) {
     return function (dispatch) {
-        dispatch(userDeletedSuccess(id));
-        return Promise.resolve();
-        /*return userApi.deleteUser(id).then(res => {
+        /*dispatch(userDeletedSuccess(id));
+        return Promise.resolve();*/
+        return userApi.deleteUser(id).then(res => {
+            dispatch(userDeletedSuccess(id));
         }).catch(error => {
             throw(error);
-        })*/
+        })
     }
 }
 
